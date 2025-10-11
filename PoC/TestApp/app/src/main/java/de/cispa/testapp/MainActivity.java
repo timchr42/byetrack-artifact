@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         // Simulate launching CT with capability (Note: Firefox does not support TWA)
         launch2.setOnClickListener(v -> {
             String url = "http://10.0.2.2/"; // examplecorp.de -> 10.0.2.2 on emulator
-            //String url = "http://10.0.2.2:8082/"; // mitmproxy url
 
             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
             CustomTabColorSchemeParams default_colors = new CustomTabColorSchemeParams.Builder()
@@ -87,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
                     .build();
             builder.setDefaultColorSchemeParams(default_colors);
             CustomTabsIntent customTabsIntent = builder.build();
-            customTabsIntent.intent.setPackage(FIREFOX_FENIX); // determine in what browser CT is launched
+            //customTabsIntent.intent.setPackage(FIREFOX_FENIX); // determine in what browser CT is launched
 
             customTabsIntent.launchUrl(this, Uri.parse(url));
-            Log.d(LOGTAG, "CT to untrusted domain launched");
+            Log.d(LOGTAG, "CT to " + url + " launched");
         });
 
         launch1.setOnClickListener(v -> {
@@ -103,13 +102,12 @@ public class MainActivity extends AppCompatActivity {
                     .build();
             builder.setDefaultColorSchemeParams(default_colors);
             CustomTabsIntent customTabsIntent = builder.build();
-            customTabsIntent.intent.setPackage(FIREFOX_FENIX); // -> Use if Firefox (Geckoview_Example) not default browser
+            //customTabsIntent.intent.setPackage(FIREFOX_FENIX); // -> Use if Firefox (Geckoview_Example) not default browser
 
             customTabsIntent.launchUrl(this, Uri.parse(url));
-            Log.d(LOGTAG, "CT to trusted domain launched");
+            Log.d(LOGTAG, "CT to " + url + " launched");
         });
 
-        // Simulate storing a received capability from browser
         storeButton.setOnClickListener(v -> {
             DebugHelp.clearTokenStorage(finalPrefs);
             //DebugHelp.clearTokenStorage(wildcardPrefs);
