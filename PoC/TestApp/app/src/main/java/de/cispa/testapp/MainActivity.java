@@ -1,12 +1,19 @@
 package de.cispa.testapp;
 
+import android.content.ComponentName;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
+import androidx.browser.customtabs.CustomTabsClient;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.byetrack.*;
+import androidx.browser.customtabs.CustomTabsServiceConnection;
+import androidx.browser.customtabs.CustomTabsSession;
+import androidx.browser.trusted.TrustedWebActivityIntent;
+import androidx.browser.trusted.TrustedWebActivityIntentBuilder;
 import androidx.core.content.ContextCompat;
 
 import android.content.Context;
@@ -28,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences.OnSharedPreferenceChangeListener wildcard_sharedPrefsListener;
     private SharedPreferences.OnSharedPreferenceChangeListener final_sharedPrefsListener;
 
+    // TWA Test
+    private CustomTabsClient customTabsClient;
+    private CustomTabsSession customTabsSession;
+    private CustomTabsServiceConnection connection;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         Button launch1 = findViewById(R.id.btnLaunch1);
         Button launch2 = findViewById(R.id.btnLaunch2);
         Button launch3 = findViewById(R.id.btnLaunch3);
+        Button launch4 = findViewById(R.id.btnLaunch4);
+        Button launch5 = findViewById(R.id.btnLaunch5);
         Button tokenInfo1 = findViewById(R.id.btnTokenInfo1);
         Button tokenInfo2 = findViewById(R.id.btnTokenInfo2);
         Button tokenInfo3 = findViewById(R.id.btnTokenInfo3);
@@ -53,9 +67,31 @@ public class MainActivity extends AppCompatActivity {
         final_sharedPrefsListener = (sharedPrefs, key) -> finalTokensStored.setText(DebugHelp.displayFinalTokens(this));
 
         // Browser Packages
-        String GECKOVIEW_EXAMPLE = "org.mozilla.geckoview_example";
         String FIREFOX_FENIX = "org.mozilla.fenix.debug";
         String CHROME = "com.android.chrome";
+
+        launch5.setOnClickListener(v -> {
+            String url = "http://10.0.2.2/"; // examplecorp.de -> 10.0.2.2 on emulator
+            establishConnection(url);
+            boolean ok = CustomTabsClient.bindCustomTabsService(
+                    this, FIREFOX_FENIX, connection);
+
+            if (!ok) {
+                Log.e(LOGTAG, "Failed to bind to CustomTabsService");
+            }
+        });
+
+        launch4.setOnClickListener( v -> {
+            String url = "https://royaleapi.com";
+            establishConnection(url);
+
+            boolean ok = CustomTabsClient.bindCustomTabsService(
+                    this, FIREFOX_FENIX, connection);
+
+            if (!ok) {
+                Log.e(LOGTAG, "Failed to bind to CustomTabsService");
+            }
+        });
 
         launch3.setOnClickListener(v -> {
             String url = "https://royaleapi.com";
@@ -70,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                     .build();
             builder.setDefaultColorSchemeParams(default_colors);
             CustomTabsIntent customTabsIntent = builder.build();
-            customTabsIntent.intent.setPackage(FIREFOX_FENIX); // -> Use if Firefox (Geckoview_Example) not default browser
+            // customTabsIntent.intent.setPackage(FIREFOX_FENIX); // -> Use if Firefox (Geckoview_Example) not default browser
 
             customTabsIntent.launchUrl(this, Uri.parse(url), additonalHosts);
             Log.d(LOGTAG, "CT to trusted domain launched");
@@ -147,6 +183,46 @@ public class MainActivity extends AppCompatActivity {
             Log.d(LOGTAG, "Writing cookie '" + tokenToWrite + "' with value 'test_value'");
             Client.writeTokenCookieValue(this, tokenToWrite, "test_value");
         });
+    }
+
+    /*
+     * Convenience method to establish connection to CustomTabsService with url to be launched
+     */
+    private void establishConnection(String url) {
+        connection = new CustomTabsServiceConnection() {
+            @Override
+            public void onCustomTabsServiceConnected(@NonNull ComponentName name, @NonNull CustomTabsClient client) {
+                Log.d(LOGTAG, "Connected to CustomTabsService");
+                customTabsClient = client;
+                customTabsClient.warmup(0L);
+                customTabsSession = customTabsClient.newSession(null);
+
+                if (customTabsSession == null) {
+                    Log.e(LOGTAG, "Cannot launch TWA without CustomTabsSession");
+                    return;
+                }
+
+                TrustedWebActivityIntentBuilder builder =
+                        new TrustedWebActivityIntentBuilder(Uri.parse(url));
+
+                CustomTabColorSchemeParams default_colors = new CustomTabColorSchemeParams.Builder()
+                        .setToolbarColor(ContextCompat.getColor(MainActivity.this, R.color.my_purple))
+                        .build();
+                builder.setDefaultColorSchemeParams(default_colors);
+
+                TrustedWebActivityIntent twaIntent = builder.build(customTabsSession);
+
+                // Launch
+                twaIntent.launchTrustedWebActivity(MainActivity.this);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                Log.w(LOGTAG, "CustomTabsService disconnected");
+                customTabsClient = null;
+                customTabsSession = null;
+            }
+        };
     }
 
     @Override

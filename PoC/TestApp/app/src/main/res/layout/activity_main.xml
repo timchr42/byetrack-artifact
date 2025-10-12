@@ -16,14 +16,28 @@
         android:id="@+id/btnLaunch2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Launch 'examplecorp.de'"
+        android:text="CT launch 'examplecorp.de'"
         tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/btnLaunch3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Launch with additional tokens"
+        android:text="CT launch with additional tokens"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnLaunch4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TWA launch 'royaleapi.com'"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnLaunch5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TWA launch 'examplecorp.de'"
         tools:ignore="HardcodedText" />
 
     <Button
@@ -37,21 +51,21 @@
         android:id="@+id/btnTokenInfo1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="getTokenNames"
+        android:text="getTokenNames demo"
         tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/btnTokenInfo2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="getTokenValues"
+        android:text="getTokenValues demo"
         tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/btnTokenInfo3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="writeTokenValue"
+        android:text="writeTokenValue demo"
         tools:ignore="HardcodedText" />
 
     <TextView

@@ -41,7 +41,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    //implementation(libs.browser)
+    //implementation(libs.browser) -> got replaced by AndroidxBrowserByetrack
     implementation(libs.firebase.crashlytics.buildtools)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
