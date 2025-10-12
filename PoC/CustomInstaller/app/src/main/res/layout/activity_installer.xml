@@ -26,6 +26,13 @@
         android:text="Install Hytrack tracker (policy)"
         tools:ignore="HardcodedText" />
 
+    <Button
+        android:id="@+id/installApp3Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Install Hytrack launcher (no-policy)"
+        tools:ignore="HardcodedText" />
+
     <!--
     <Button
         android:id="@+id/debugButton"

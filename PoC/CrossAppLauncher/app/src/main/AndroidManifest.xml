@@ -12,14 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CrossAppTrackerOne"
         tools:targetApi="31">
+
+        <!-- optional site association -->
         <meta-data
             android:name="asset_statements"
             android:resource="@string/asset_statements" />
-
-        <!--Put policy in application tag so accessible by whole app-->
-        <meta-data
-            android:name="policy"
-            android:resource="@xml/policy" />
 
         <activity
             android:name=".MainActivity"
@@ -49,39 +46,26 @@
         </activity>
 
         <activity
-            android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
-            android:label="ITWA (instrumented)"
-            android:exported="true">
+            android:name=".TwaLauncherActivity"
+            android:exported="true"
+            android:label="ITWA">
 
-            <!-- Edit android:value to change the url opened by the Trusted Web Activity -->
-            <meta-data
-                android:name="android.support.customtabs.trusted.DEFAULT_URL"
-                android:value="http://10.0.2.2/?hide&amp;demo&amp;s=trackmeplslaunch&amp;app=TrackingEventA" />
-
-            <!-- This intent-filter adds the Trusted Web Activity to the Android Launcher -->
+            <!-- Entry point for app launch -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <meta-data
-                android:name="android.support.customtabs.trusted.ADDITIONAL_TRUSTED_ORIGINS"
-                android:resource="@array/additional_trusted_origins" />
-
-
+            <!-- Trusted Web Activity link handling -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <!-- Edit android:host to handle links to the target URL-->
                 <data
                     android:host="10.0.2.2"
                     android:scheme="https" />
             </intent-filter>
         </activity>
-
 
     </application>
 
