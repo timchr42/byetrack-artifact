@@ -13,5 +13,5 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "CrossAppTrackerOneInstrumented"
+rootProject.name = "CrossAppTrackerOneNoPolicy"
 include ':app'

@@ -56,12 +56,12 @@ android {
 dependencies {
     dependencies {
         // forked browser lib (drop-in replacement for androidx.browser:browser)
-        implementation 'com.github.timchr42:AndroidxBrowserByetrack:0.2.0'
+        implementation 'com.github.timchr42:AndroidxBrowserByetrack:0.2.1'
 
         // Google’s Android Browser Helper, but exclude its androidx.browser:browser (dependency issues)
-        implementation('com.google.androidbrowserhelper:androidbrowserhelper:2.2.0') {
-            exclude group: 'androidx.browser', module: 'browser'
-        }
+        //implementation('com.google.androidbrowserhelper:androidbrowserhelper:2.2.0') {
+        //    exclude group: 'androidx.browser', module: 'browser'
+        //}
 
         implementation 'androidx.appcompat:appcompat:1.6.1'
         implementation 'com.google.android.material:material:1.11.0'

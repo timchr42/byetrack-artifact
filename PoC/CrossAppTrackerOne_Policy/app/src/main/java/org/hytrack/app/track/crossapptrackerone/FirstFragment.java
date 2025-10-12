@@ -1,6 +1,7 @@
 package org.hytrack.app.track.crossapptrackerone;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,12 +15,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
+import androidx.browser.customtabs.CustomTabsClient;
 import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsServiceConnection;
+import androidx.browser.customtabs.CustomTabsSession;
+import androidx.browser.trusted.TrustedWebActivityIntent;
 import androidx.browser.trusted.TrustedWebActivityIntentBuilder;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.androidbrowserhelper.trusted.TwaLauncher;
+//import com.google.androidbrowserhelper.trusted.TwaLauncher; // only helpful for chrome, PoC uses firefox
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +34,10 @@ import org.hytrack.app.track.crossapptrackerone.databinding.FragmentFirstBinding
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
+
+    private CustomTabsServiceConnection connection; // instead of using Twa launcher (as only helper for chrome)
+    private CustomTabsClient customTabsClient;
+    private CustomTabsSession customTabsSession;
 
     @Override
     public View onCreateView(
@@ -87,11 +96,43 @@ public class FirstFragment extends Fragment {
                         "https://schnellnochraviolimachen.de/"
                 );
 
-                TrustedWebActivityIntentBuilder builder = new TrustedWebActivityIntentBuilder(LAUNCH_URI)
-                        .setAdditionalTrustedOrigins(origins);
                 // set ourselves as target of the intent
                 //intent.setPackage("org.hytrack.app.track.crossapptrackerone");
-                new TwaLauncher(getContext()).launch(builder, null, null, null);
+                //new TwaLauncher(getContext()).launch(builder, null, null, null);
+
+                connection = new CustomTabsServiceConnection() {
+                    @Override
+                    public void onCustomTabsServiceConnected(@NonNull ComponentName name, @NonNull CustomTabsClient client) {
+                        customTabsClient = client;
+                        customTabsClient.warmup(0L);
+                        customTabsSession = customTabsClient.newSession(null);
+
+                        if (customTabsSession == null) {
+                            return;
+                        }
+
+                        TrustedWebActivityIntentBuilder builder = new TrustedWebActivityIntentBuilder(LAUNCH_URI)
+                                .setAdditionalTrustedOrigins(origins);
+
+                        CustomTabColorSchemeParams default_colors = new CustomTabColorSchemeParams.Builder()
+                                .setToolbarColor(ContextCompat.getColor(view.getContext(), R.color.purple_500))
+                                .build();
+                        builder.setDefaultColorSchemeParams(default_colors);
+
+                        TrustedWebActivityIntent twaIntent = builder.build(customTabsSession);
+
+                        // Launch
+                        twaIntent.launchTrustedWebActivity(view.getContext());
+                    }
+
+                    @Override
+                    public void onServiceDisconnected(ComponentName name) {
+                        customTabsClient = null;
+                        customTabsSession = null;
+                    }
+                };
+
+                CustomTabsClient.bindCustomTabsService(view.getContext(), "org.mozilla.fenix.debug", connection);
 
             }
         });
@@ -108,7 +149,7 @@ public class FirstFragment extends Fragment {
                 Log.w("CTT", url);
                 Uri LAUNCH_URI = Uri.parse(url);
 
-                // Instead of launching TWA, launch CT (as TWA not supported by Firefox (Gecko)
+                // Launch CT directly
                 CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                 CustomTabColorSchemeParams default_colors = new CustomTabColorSchemeParams.Builder()
                         .setToolbarColor(ContextCompat.getColor(view.getContext(), R.color.purple_500))
