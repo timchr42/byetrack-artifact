@@ -68,11 +68,11 @@ The same setup steps were used as outlined by the authors of HyTrack. For refere
 - The installer allows you to install both HyTrack apps and the test app via buttons.
 
 ## Browser Set-Up:
-- Clone the modified [firefox fork](https://github.com/timchr42/firefox) from git instead of the original one.
- - f.e. via ssh: `git clone git@github.com:timchr42/firefox.git`.
-- Make sure you are on the correct branch (`capability-mods-clean`).
-- Follow the instructions provided by the firefox [docs](https://firefox-source-docs.mozilla.org/mobile/android/fenix.html) to setup the build environment correctly depending on your OS.
+- Clone the [firefox fork](https://github.com/timchr42/firefox/tree/capability-mods-clean) to your machine (`git clone git@github.com:timchr42/firefox.git`).
+- Follow the instructions provided by the [firefox-for-android docs](https://firefox-source-docs.mozilla.org/mobile/android/index.html#firefox-for-android) to configure everything for Android development. 
+ - Checkout the branch `capability-mods-clean` via `git checkout capability-mods-clean` instead of the mozilla-central branch.
 - If everything is set up correctly, you can build and install the browser via `./mach build` and `./mach install --app fenix` respectively in the root of the firefox folder.
+ - For the `mach` commands to work, you need to use python 3.12 or lower.
 
 
 ## Test
