@@ -5,8 +5,8 @@ This is the artifact of the bachelor thesis "Capabilities as a Solution against 
 ## Structure
 
 - `demo`: Contains a demo vieo of the defense mitigation in action, as well as a description of the demo.
-- `PoC`: Contains the proof-of-concept implementation of the HyTrack webapp, their two andriod apps equipped with the defense mechanism, a well meaning test app, a malicious "Evil" app and a custom installer. 
-The [library](https://github.com/timchr42/byetrack) which implements the defense mechanism can be found on github, such as the modified androidx.browser [library](https://github.com/timchr42/AndroidxBrowserByetrack), demonstating how it can be hooked into the existing android ecosystem and the modified [firefox](https://github.com/timchr42/firefox) browser for andoid.
+- `PoC`: Contains the proof-of-concept implementation of the HyTrack webapp, their two android apps equipped with the defense mechanism (with and without policy), a well meaning test app, a malicious "Evil" app and a custom installer. 
+The [library](https://github.com/timchr42/byetrack) which implements the defense mechanism can be found extern on github, such as the modified androidx.browser [library](https://github.com/timchr42/AndroidxBrowserByetrack), demonstating how it can be hooked into the existing android ecosystem and the modified [firefox](https://github.com/timchr42/firefox) browser for andoid.
 
 ## Concept Overview
 ![Poster](concept_overview.png)

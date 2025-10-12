@@ -2,10 +2,8 @@
 # Proof-Of-Concept: Capabilities as a Solution against Tracking
 
 - This repository contains the code for two HyTrack apps, modified with the mitigation framework, as well as a test app to demonstrate additional functionality, a malicious app (Evil) trying to impersonate the test app (inclused a respective local evil library) and a custom installer.
-- The byetrack library providing the app-side mitigaiton functionality is inluded in its own repository, such as the modified androidx browser library, which uses the token enhanced launchUrl method instead of the vulnerable one.
-- Similarly, the modified Firefox Fenix browser is in its own repository, which is used as the browser in this demo.
-
-The same setup steps were used as outlined by the authors of HyTrack. For reference see `README_setup.md`.
+- The [byetrack library](https://github.com/timchr42/byetrack) providing the app-side mitigaiton functionality is inluded in its own repository, such as the modified [androidx browser library](https://github.com/timchr42/AndroidxBrowserByetrack), which uses the token enhanced launchUrl method instead of the vulnerable one.
+- Similarly, the modified [firefox fenix](https://github.com/timchr42/firefox) browser lives in its own repository.
 
 ** Additional Information: **
 - Throughout the changes, I refere to the mitigation framework as "byetrack".
@@ -94,11 +92,4 @@ The same setup steps were used as outlined by the authors of HyTrack. For refere
        implementation 'com.github.timchr42:AndroidxBrowserByetrack:0.2.0'
    }
    ```
- - exclude the original androidx.browser dependency if you have it to avoid dependency conflicts:
-   ```gradle
-   configurations {
-       all {
-           exclude group: 'androidx.browser', module: 'browser'
-       }
-   }
-   ```
+ - Also exclude the original `androidx.browser` from other libraries that might use it to resolve dependency conflicts.
