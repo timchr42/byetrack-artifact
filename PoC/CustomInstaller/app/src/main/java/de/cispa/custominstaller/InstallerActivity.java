@@ -85,6 +85,10 @@ public class InstallerActivity extends AppCompatActivity {
                 installWithLauncher("trackerlauncher_nopolicy.apk", "org.hytrack.app.track.crossapplauncher.instrumented")
         );
 
+        findViewById(R.id.installApp3Button).setOnClickListener(v ->
+                installWithLauncher("trackerlauncher_policy.apk", "org.hytrack.app.track.crossapplauncher.policy")
+        );
+
     }
 
     private Uri copyApkFromAssetsToFiles(String assetName) throws IOException {

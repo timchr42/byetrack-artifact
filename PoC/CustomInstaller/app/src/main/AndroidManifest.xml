@@ -43,6 +43,7 @@
         <package android:name="org.hytrack.app.track.crossapptrackerone.instrumented" />
         <package android:name="org.hytrack.app.track.crossapptrackerone.policy" />
         <package android:name="org.hytrack.app.track.crossapplauncher.instrumented" />
+        <package android:name="org.hytrack.app.track.crossapplauncher.policy" />
 
         <!-- Byetrack provider access -->
         <package android:name="de.cispa.byetrack" />
