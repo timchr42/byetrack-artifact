@@ -67,7 +67,8 @@
 
 ## Browser Set-Up:
 - Clone the [firefox fork](https://github.com/timchr42/firefox/tree/capability-mods-clean) to your machine (`git clone git@github.com:timchr42/firefox.git`).
-- Follow the instructions provided by the [firefox-for-android docs](https://firefox-source-docs.mozilla.org/mobile/android/index.html#firefox-for-android) to configure everything for Android development. 
+- Depending on your OS, follow the respective instructions provided by the [firefox-for-android docs](https://firefox-source-docs.mozilla.org/mobile/android/index.html#firefox-for-android) to configure everything for Android development.
+ - Do not forget to bootstrap GeckoView/Firefox for Android by running `./mach --no-interactive bootstrap --application-choice="GeckoView/Firefox for Android"`
  - Checkout the branch `capability-mods-clean` via `git checkout capability-mods-clean` instead of the mozilla-central branch.
 - If everything is set up correctly, you can build and install the browser via `./mach build` and `./mach install --app fenix` respectively in the root of the firefox folder.
  - For the `mach` commands to work, you need to use python 3.12 or lower.
@@ -77,7 +78,7 @@
 - Make sure Firefox (Fenix) is the default browser on the emuluator or device.
 - Follow steps in the demo or play around.
 - Feel free to try out different policy tailored to you own needs by changing the `policy.json` in the assets folder the respective app.
-- Also, feel free to try out the modified `androidx.browser` [library](https://github.com/timchr42/AndroidxBrowserByetrack) including the necessary changes hosted on github via jitpack in your own apps.
+- Also, feel free to try out the modified [androidx.browser library](https://github.com/timchr42/AndroidxBrowserByetrack) including the necessary changes hosted on github via jitpack in your own apps.
  - Add maven repo to repositories in your app's settings.gradle:
    ```gradle
    repositories {
