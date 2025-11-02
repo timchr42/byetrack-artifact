@@ -73,7 +73,9 @@
 - If everything is set up correctly, you can build and install the browser via `./mach build` and `./mach install --app fenix` respectively in the root of the firefox folder.
  - For the `mach` commands to work, you need to use python 3.12 or lower.
 
-[Otherwise, you can also follow the [firefox-for-android docs](https://firefox-source-docs.mozilla.org/mobile/android/index.html#firefox-for-android) and apply the patch provided in this repository in the Firefox_Fenix folder to the source code manually before building and installing the browser by running `git am < Firefox_Fenix/byetrack.patch`.]: #
+<!---
+Otherwise, you can also follow the [firefox-for-android docs](https://firefox-source-docs.mozilla.org/mobile/android/index.html#firefox-for-android) and apply the patch provided in this repository in the Firefox_Fenix folder to the source code manually before building and installing the browser by running `git am < Firefox_Fenix/byetrack.patch`.
+-->
 
 
 ## Test
