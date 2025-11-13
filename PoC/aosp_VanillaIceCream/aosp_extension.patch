@@ -1,0 +1,115 @@
+
+project frameworks/base/
+diff --git a/core/java/android/content/Intent.java b/core/java/android/content/Intent.java
+index dfa2973816bd..07a3e0457857 100644
+--- a/core/java/android/content/Intent.java
++++ b/core/java/android/content/Intent.java
+@@ -7812,6 +7812,7 @@ public class Intent implements Parcelable, Cloneable {
+     /** Token to track instant app launches. Local only; do not copy cross-process. */
+     private String mLaunchToken;
+     private Intent mOriginalIntent; // Used for the experimental "component alias" feature.
++    private int mRealCallingUid;
+ 
+     // ---------------------------------------------------------------------
+ 
+@@ -7849,6 +7850,7 @@ public class Intent implements Parcelable, Cloneable {
+         this.mPackage = o.mPackage;
+         this.mComponent = o.mComponent;
+         this.mOriginalIntent = o.mOriginalIntent;
++	this.mRealCallingUid = o.mRealCallingUid;
+ 
+         if (o.mCategories != null) {
+             this.mCategories = new ArraySet<>(o.mCategories);
+@@ -9885,6 +9887,13 @@ public class Intent implements Parcelable, Cloneable {
+         }
+         return new Intent(this, COPY_MODE_HISTORY);
+     }
++    
++    /**
++     * @hide
++     */
++    public int getRealCallingUid() {
++	return mRealCallingUid;
++    }
+ 
+     /**
+      * Retrieve any special flags associated with this intent.  You will
+@@ -11205,6 +11214,14 @@ public class Intent implements Parcelable, Cloneable {
+         }
+     }
+ 
++    /**
++     * @hide
++     */
++    public Intent setRealCallingUid(int realCallingUid) {
++	mRealCallingUid = realCallingUid;
++	return this;
++    }
++
+     /**
+      * Set special flags controlling how this intent is handled.  Most values
+      * here depend on the type of component being executed by the Intent,
+@@ -12163,6 +12180,7 @@ public class Intent implements Parcelable, Cloneable {
+         out.writeInt(mFlags);
+         out.writeInt(mExtendedFlags);
+         out.writeString8(mPackage);
++	out.writeInt(mRealCallingUid);
+         ComponentName.writeToParcel(mComponent, out);
+ 
+         if (mSourceBounds != null) {
+@@ -12232,6 +12250,7 @@ public class Intent implements Parcelable, Cloneable {
+         mFlags = in.readInt();
+         mExtendedFlags = in.readInt();
+         mPackage = in.readString8();
++	mRealCallingUid = in.readInt();
+         mComponent = ComponentName.readFromParcel(in);
+ 
+         if (in.readInt() != 0) {
+diff --git a/services/core/java/com/android/server/am/ActivityManagerService.java b/services/core/java/com/android/server/am/ActivityManagerService.java
+index 46c963f009c7..ff46a270e660 100644
+--- a/services/core/java/com/android/server/am/ActivityManagerService.java
++++ b/services/core/java/com/android/server/am/ActivityManagerService.java
+@@ -3315,6 +3315,7 @@ public class ActivityManagerService extends IActivityManager.Stub
+             String callingFeatureId, Intent intent, String resolvedType, IBinder resultTo,
+             String resultWho, int requestCode, int startFlags, ProfilerInfo profilerInfo,
+             Bundle bOptions) {
++	    Log.d("Byetrack", "startActivityWithFeature");
+         return mActivityTaskManager.startActivity(caller, callingPackage, callingFeatureId, intent,
+                 resolvedType, resultTo, resultWho, requestCode, startFlags, profilerInfo, bOptions);
+     }
+@@ -3327,6 +3328,7 @@ public class ActivityManagerService extends IActivityManager.Stub
+     public final int startActivityAsUser(IApplicationThread caller, String callingPackage,
+             Intent intent, String resolvedType, IBinder resultTo, String resultWho, int requestCode,
+             int startFlags, ProfilerInfo profilerInfo, Bundle bOptions, int userId) {
++	    Log.d("Byetrack", "startActivityAsUser");
+         return startActivityAsUserWithFeature(caller, callingPackage, null, intent, resolvedType,
+                 resultTo, resultWho, requestCode, startFlags, profilerInfo, bOptions, userId);
+     }
+@@ -3336,6 +3338,7 @@ public class ActivityManagerService extends IActivityManager.Stub
+             String callingPackage, String callingFeatureId, Intent intent, String resolvedType,
+             IBinder resultTo, String resultWho, int requestCode, int startFlags,
+             ProfilerInfo profilerInfo, Bundle bOptions, int userId) {
++	    Log.d("Byetrack", "startActivityAsUserWithFeature");
+         return mActivityTaskManager.startActivityAsUser(caller, callingPackage,
+                     callingFeatureId, intent, resolvedType, resultTo, resultWho, requestCode,
+                     startFlags, profilerInfo, bOptions, userId);
+diff --git a/services/core/java/com/android/server/wm/ActivityStarter.java b/services/core/java/com/android/server/wm/ActivityStarter.java
+index 365fa950a2d9..8e7eeb27a32b 100644
+--- a/services/core/java/com/android/server/wm/ActivityStarter.java
++++ b/services/core/java/com/android/server/wm/ActivityStarter.java
+@@ -123,6 +123,7 @@ import android.service.voice.IVoiceInteractionSession;
+ import android.text.TextUtils;
+ import android.util.Pools.SynchronizedPool;
+ import android.util.Slog;
++import android.util.Log;
+ import android.window.RemoteTransition;
+ 
+ import com.android.internal.annotations.VisibleForTesting;
+@@ -1711,6 +1712,7 @@ class ActivityStarter {
+ 
+         computeLaunchingTaskFlags();
+         mIntent.setFlags(mLaunchFlags);
++	mIntent.setRealCallingUid(realCallingUid);
+ 
+         boolean dreamStopping = false;
+ 
