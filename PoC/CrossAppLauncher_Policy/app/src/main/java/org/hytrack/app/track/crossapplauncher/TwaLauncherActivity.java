@@ -21,7 +21,7 @@ public class TwaLauncherActivity extends Activity {
 
     private static final String LOGTAG = "TwaLauncher";
     private static final String FENIX_PACKAGE = "org.mozilla.fenix.debug";
-    private static final Uri LAUNCH_URI = Uri.parse("http://10.0.2.2/?hide&demo&s=trackmeplslaunch&app=TrackingEventA");
+    private static final Uri LAUNCH_URI = Uri.parse("http://10.0.2.2/?hide&demo&s=donttrackmeplslaunch&app=TrackingEventA");
     private static final List<String> TRUSTED_ORIGINS = Arrays.asList(
             "https://schnellnochraviolimachen.de/"
     );

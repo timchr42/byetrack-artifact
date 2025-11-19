@@ -41,14 +41,13 @@
 
                 <!-- Edit android:host to handle links to the target URL-->
                 <data
-                    android:scheme="trackmeplslaunch" />
+                    android:scheme="donttrackmeplslaunch" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".TwaLauncherActivity"
-            android:exported="true"
-            android:label="ITWA">
+            android:exported="true">
 
             <!-- Entry point for app launch -->
             <intent-filter>
